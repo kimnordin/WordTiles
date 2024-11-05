@@ -27,7 +27,7 @@ struct GameView: View {
         .onAppear {
             self.tiles = generateGrid(from: letters)
         }
-        .onPreferenceChange(TileFramePreferenceKey.self) { preferences in
+        .onPreferenceChange(TileSelectionPreferenceKey.self) { preferences in
             self.tileFrames = preferences
         }
         .onPreferenceChange(TileLetterPreferenceKey.self) { preferences in

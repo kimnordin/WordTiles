@@ -22,10 +22,10 @@ struct TileView: View {
         }
         .contentShape(Rectangle())
         .overlay(
-            GeometryReader { geo in
+            GeometryReader { geometry in
                 Color.clear.preference(
-                    key: TileFramePreferenceKey.self,
-                    value: [gridPosition: geo.frame(in: .named("GameView"))]
+                    key: TileSelectionPreferenceKey.self,
+                    value: [gridPosition: geometry.frame(in: .named("GameView"))]
                 )
             }
         )
