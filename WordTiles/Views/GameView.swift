@@ -8,83 +8,91 @@
 import SwiftUI
 
 struct GameView: View {
-    let letters = [
-        ["A", "B", "C"],
-        ["D", "E", "F"],
-        ["G", "H", "I"]
-    ]
-
+    let letters: [String] = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+    let columns: Int = 3
+    
+    @State private var tiles: [Tile] = []
     @State private var selectedPositions: [CGPoint] = []
     @State private var selectedLetters: [String] = []
     @State private var tileFrames: [CGPoint: CGRect] = [:]
-
+    
     var body: some View {
-        GeometryReader { geo in
-            VStack {
-                Spacer()
-                ZStack {
-                    VStack(spacing: 10) {
-                        ForEach(0..<3, id: \.self) { row in
-                            HStack(spacing: 10) {
-                                ForEach(0..<3, id: \.self) { column in
-                                    let position = CGPoint(x: CGFloat(column), y: CGFloat(row))
-                                    TileView(
-                                        letter: letters[row][column],
-                                        isSelected: selectedPositions.contains(position),
-                                        gridPosition: position // Pass the grid position
-                                    )
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    Path { path in
-                        guard !selectedPositions.isEmpty else { return }
-                        if let firstPos = selectedPositions.first, let firstFrame = tileFrames[firstPos] {
-                            let startPoint = CGPoint(x: firstFrame.midX, y: firstFrame.midY)
-                            path.move(to: startPoint)
-                            for pos in selectedPositions.dropFirst() {
-                                if let frame = tileFrames[pos] {
-                                    let point = CGPoint(x: frame.midX, y: frame.midY)
-                                    path.addLine(to: point)
-                                }
-                            }
-                        }
-                    }
-                    .stroke(Color.blue, lineWidth: 5)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                Spacer()
+        VStack {
+            Spacer()
+            ZStack {
+                GridView(tiles: tiles, columns: columns, selectedPositions: $selectedPositions)
+                TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .coordinateSpace(name: "GameView")
-            .onPreferenceChange(TileFramePreferenceKey.self) { preferences in
-                self.tileFrames = preferences
-            }
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { value in
-                        let location = value.location
-                        for (gridPosition, frame) in tileFrames {
-                            if frame.contains(location) {
-                                if !selectedPositions.contains(gridPosition) {
-                                    selectedPositions.append(gridPosition)
-                                    let row = Int(gridPosition.y)
-                                    let column = Int(gridPosition.x)
-                                    selectedLetters.append(letters[row][column])
-                                }
-                                break
-                            }
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white)
+        .coordinateSpace(name: "GameView")
+        .onAppear {
+            self.tiles = generateGrid(from: letters, columns: columns)
+        }
+        .onPreferenceChange(TileFramePreferenceKey.self) { preferences in
+            self.tileFrames = preferences
+        }
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { value in
+                    let location = value.location
+                    for (gridPosition, frame) in tileFrames {
+                        if frame.contains(location) {
+                            handleTileSelection(at: gridPosition)
+                            break
                         }
                     }
-                    .onEnded { _ in
-                        print("Selected word: \(selectedLetters.joined())")
-                        selectedPositions.removeAll()
-                        selectedLetters.removeAll()
-                    }
-            )
+                }
+                .onEnded { _ in
+                    completeWord()
+                }
+        )
+    }
+    
+    private func completeWord() {
+        print("Selected word: \(selectedLetters.joined())")
+        selectedPositions.removeAll()
+        selectedLetters.removeAll()
+    }
+    
+    private func generateGrid(from letters: [String], columns: Int) -> [Tile] {
+        var tiles: [Tile] = []
+        for (index, letter) in letters.enumerated() {
+            let row = index / columns
+            let column = index % columns
+            tiles.append(Tile(letter: letter, row: row, column: column))
         }
-        .background(Color.white)
+        return tiles
+    }
+    
+    private func isAdjacent(_ pos1: CGPoint, _ pos2: CGPoint) -> Bool {
+        let dx = abs(Int(pos1.x - pos2.x))
+        let dy = abs(Int(pos1.y - pos2.y))
+        return (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
+    }
+    
+    private func handleTileSelection(at position: CGPoint) {
+        if let lastPosition = selectedPositions.last {
+            if position == lastPosition {
+                return
+            } else if selectedPositions.count >= 2, position == selectedPositions[selectedPositions.count - 2] {
+                selectedPositions.removeLast()
+                selectedLetters.removeLast()
+            } else if !selectedPositions.contains(position) {
+                selectedPositions.append(position)
+                if let tile = tiles.first(where: { CGFloat($0.row) == position.y && CGFloat($0.column) == position.x }) {
+                    selectedLetters.append(tile.letter)
+                }
+            }
+        } else {
+            selectedPositions.append(position)
+            if let tile = tiles.first(where: { CGFloat($0.row) == position.y && CGFloat($0.column) == position.x }) {
+                selectedLetters.append(tile.letter)
+            }
+        }
     }
 }
 

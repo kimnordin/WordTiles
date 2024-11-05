@@ -17,8 +17,8 @@ struct TileView: View {
             .font(.largeTitle)
             .frame(width: 80, height: 80)
             .background(
-                GeometryReader { geometry in
-                    Color.clear.preference(key: TileFramePreferenceKey.self, value: [gridPosition: geometry.frame(in: .named("GameView"))])
+                GeometryReader { geo in
+                    Color.clear.preference(key: TileFramePreferenceKey.self, value: [gridPosition: geo.frame(in: .named("GameView"))])
                 }
             )
             .background(isSelected ? Color.blue.opacity(0.3) : Color.gray.opacity(0.2))
