@@ -8,32 +8,30 @@
 import SwiftUI
 
 struct GameView: View {
-    let letters: [String] = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
-    let columns: Int = 3
+    let letters: [String] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
     
     @State private var tiles: [Tile] = []
+    @State private var currentColumns: Int = 0
     @State private var selectedPositions: [CGPoint] = []
     @State private var selectedLetters: [String] = []
     @State private var tileFrames: [CGPoint: CGRect] = [:]
+    @State private var positionToLetter: [CGPoint: String] = [:]
     
     var body: some View {
-        VStack {
-            Spacer()
-            ZStack {
-                GridView(tiles: tiles, columns: columns, selectedPositions: $selectedPositions)
-                TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            Spacer()
+        ZStack {
+            GridView(tiles: tiles, selectedPositions: $selectedPositions)
+            TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.white)
         .coordinateSpace(name: "GameView")
         .onAppear {
-            self.tiles = generateGrid(from: letters, columns: columns)
+            self.tiles = generateGrid(from: letters)
         }
         .onPreferenceChange(TileFramePreferenceKey.self) { preferences in
             self.tileFrames = preferences
+        }
+        .onPreferenceChange(TileLetterPreferenceKey.self) { preferences in
+            self.positionToLetter = preferences
         }
         .gesture(
             DragGesture(minimumDistance: 0)
@@ -58,14 +56,8 @@ struct GameView: View {
         selectedLetters.removeAll()
     }
     
-    private func generateGrid(from letters: [String], columns: Int) -> [Tile] {
-        var tiles: [Tile] = []
-        for (index, letter) in letters.enumerated() {
-            let row = index / columns
-            let column = index % columns
-            tiles.append(Tile(letter: letter, row: row, column: column))
-        }
-        return tiles
+    private func generateGrid(from letters: [String]) -> [Tile] {
+        return letters.map { Tile(letter: $0) }
     }
     
     private func isAdjacent(_ pos1: CGPoint, _ pos2: CGPoint) -> Bool {
@@ -81,16 +73,16 @@ struct GameView: View {
             } else if selectedPositions.count >= 2, position == selectedPositions[selectedPositions.count - 2] {
                 selectedPositions.removeLast()
                 selectedLetters.removeLast()
-            } else if !selectedPositions.contains(position) {
+            } else if isAdjacent(lastPosition, position) && !selectedPositions.contains(position) {
                 selectedPositions.append(position)
-                if let tile = tiles.first(where: { CGFloat($0.row) == position.y && CGFloat($0.column) == position.x }) {
-                    selectedLetters.append(tile.letter)
+                if let letter = positionToLetter[position] {
+                    selectedLetters.append(letter)
                 }
             }
         } else {
             selectedPositions.append(position)
-            if let tile = tiles.first(where: { CGFloat($0.row) == position.y && CGFloat($0.column) == position.x }) {
-                selectedLetters.append(tile.letter)
+            if let letter = positionToLetter[position] {
+                selectedLetters.append(letter)
             }
         }
     }

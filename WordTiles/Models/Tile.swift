@@ -10,6 +10,4 @@ import Foundation
 struct Tile: Identifiable {
     let id = UUID()
     let letter: String
-    let row: Int
-    let column: Int
 }

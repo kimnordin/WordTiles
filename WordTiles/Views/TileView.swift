@@ -13,20 +13,26 @@ struct TileView: View {
     let gridPosition: CGPoint
 
     var body: some View {
-        Text(letter)
-            .font(.largeTitle)
-            .frame(width: 80, height: 80)
-            .background(
-                GeometryReader { geo in
-                    Color.clear.preference(key: TileFramePreferenceKey.self, value: [gridPosition: geo.frame(in: .named("GameView"))])
-                }
-            )
-            .background(isSelected ? Color.blue.opacity(0.3) : Color.gray.opacity(0.2))
-            .cornerRadius(8)
-            .contentShape(Rectangle())
+        ZStack {
+            Rectangle()
+                .fill(isSelected ? Color.blue.opacity(0.3) : Color.gray.opacity(0.2))
+                .cornerRadius(8)
+            Text(letter)
+                .font(.largeTitle)
+        }
+        .contentShape(Rectangle())
+        .overlay(
+            GeometryReader { geo in
+                Color.clear.preference(
+                    key: TileFramePreferenceKey.self,
+                    value: [gridPosition: geo.frame(in: .named("GameView"))]
+                )
+            }
+        )
+        .preference(key: TileLetterPreferenceKey.self, value: [gridPosition: letter])
     }
 }
 
 #Preview {
-    TileView(letter: "Q", isSelected: true, gridPosition: CGPoint(x: 50, y: 50))
+    TileView(letter: "Q", isSelected: true, gridPosition: CGPoint.zero)
 }
