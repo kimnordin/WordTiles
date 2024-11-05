@@ -25,6 +25,6 @@ struct TileSelectionPath: View {
                 }
             }
         }
-        .stroke(Color.blue, lineWidth: 5)
+        .stroke(.blue, lineWidth: 5)
     }
 }

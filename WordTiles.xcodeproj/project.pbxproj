@@ -6,17 +6,36 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F21CE48F2CDAD420005004CB /* dictionary.json in Resources */ = {isa = PBXBuildFile; fileRef = F21CE4852CDAD420005004CB /* dictionary.json */; };
+		F21CE4902CDAD420005004CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F21CE48C2CDAD420005004CB /* Assets.xcassets */; };
+		F21CE4922CDAD420005004CB /* WordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE47F2CDAD420005004CB /* WordValidator.swift */; };
+		F21CE4932CDAD420005004CB /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE4812CDAD420005004CB /* Tile.swift */; };
+		F21CE4942CDAD420005004CB /* TileSelectionPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE4832CDAD420005004CB /* TileSelectionPreferenceKey.swift */; };
+		F21CE4952CDAD420005004CB /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE4872CDAD420005004CB /* GameView.swift */; };
+		F21CE4962CDAD420005004CB /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE4882CDAD420005004CB /* GridView.swift */; };
+		F21CE4972CDAD420005004CB /* TileSelectionPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE4892CDAD420005004CB /* TileSelectionPath.swift */; };
+		F21CE4982CDAD420005004CB /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE48A2CDAD420005004CB /* TileView.swift */; };
+		F21CE4992CDAD420005004CB /* WordTilesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE48D2CDAD420005004CB /* WordTilesApp.swift */; };
+		F21CE49B2CDAD452005004CB /* DictionaryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE49A2CDAD44D005004CB /* DictionaryEntry.swift */; };
+		F21CE49D2CDAD476005004CB /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21CE49C2CDAD473005004CB /* Dictionary.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		F21CE44C2CDAB4A1005004CB /* WordTiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordTiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F21CE47F2CDAD420005004CB /* WordValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordValidator.swift; sourceTree = "<group>"; };
+		F21CE4812CDAD420005004CB /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
+		F21CE4832CDAD420005004CB /* TileSelectionPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileSelectionPreferenceKey.swift; sourceTree = "<group>"; };
+		F21CE4852CDAD420005004CB /* dictionary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dictionary.json; sourceTree = "<group>"; };
+		F21CE4872CDAD420005004CB /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		F21CE4882CDAD420005004CB /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
+		F21CE4892CDAD420005004CB /* TileSelectionPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileSelectionPath.swift; sourceTree = "<group>"; };
+		F21CE48A2CDAD420005004CB /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
+		F21CE48C2CDAD420005004CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F21CE48D2CDAD420005004CB /* WordTilesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordTilesApp.swift; sourceTree = "<group>"; };
+		F21CE49A2CDAD44D005004CB /* DictionaryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEntry.swift; sourceTree = "<group>"; };
+		F21CE49C2CDAD473005004CB /* Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		F21CE44E2CDAB4A1005004CB /* WordTiles */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = WordTiles;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		F21CE4492CDAB4A1005004CB /* Frameworks */ = {
@@ -32,7 +51,7 @@
 		F21CE4432CDAB4A1005004CB = {
 			isa = PBXGroup;
 			children = (
-				F21CE44E2CDAB4A1005004CB /* WordTiles */,
+				F21CE48E2CDAD420005004CB /* WordTiles */,
 				F21CE44D2CDAB4A1005004CB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +62,65 @@
 				F21CE44C2CDAB4A1005004CB /* WordTiles.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F21CE4802CDAD420005004CB /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE49C2CDAD473005004CB /* Dictionary.swift */,
+				F21CE47F2CDAD420005004CB /* WordValidator.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		F21CE4822CDAD420005004CB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE4812CDAD420005004CB /* Tile.swift */,
+				F21CE49A2CDAD44D005004CB /* DictionaryEntry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F21CE4842CDAD420005004CB /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE4832CDAD420005004CB /* TileSelectionPreferenceKey.swift */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		F21CE4862CDAD420005004CB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE4852CDAD420005004CB /* dictionary.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F21CE48B2CDAD420005004CB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE4872CDAD420005004CB /* GameView.swift */,
+				F21CE4882CDAD420005004CB /* GridView.swift */,
+				F21CE4892CDAD420005004CB /* TileSelectionPath.swift */,
+				F21CE48A2CDAD420005004CB /* TileView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F21CE48E2CDAD420005004CB /* WordTiles */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE4862CDAD420005004CB /* Resources */,
+				F21CE4802CDAD420005004CB /* Managers */,
+				F21CE4822CDAD420005004CB /* Models */,
+				F21CE4842CDAD420005004CB /* Preferences */,
+				F21CE48B2CDAD420005004CB /* Views */,
+				F21CE48C2CDAD420005004CB /* Assets.xcassets */,
+				F21CE48D2CDAD420005004CB /* WordTilesApp.swift */,
+			);
+			path = WordTiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,9 +137,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				F21CE44E2CDAB4A1005004CB /* WordTiles */,
 			);
 			name = WordTiles;
 			packageProductDependencies = (
@@ -109,6 +184,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F21CE48F2CDAD420005004CB /* dictionary.json in Resources */,
+				F21CE4902CDAD420005004CB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +196,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F21CE4922CDAD420005004CB /* WordValidator.swift in Sources */,
+				F21CE4932CDAD420005004CB /* Tile.swift in Sources */,
+				F21CE4942CDAD420005004CB /* TileSelectionPreferenceKey.swift in Sources */,
+				F21CE49D2CDAD476005004CB /* Dictionary.swift in Sources */,
+				F21CE49B2CDAD452005004CB /* DictionaryEntry.swift in Sources */,
+				F21CE4952CDAD420005004CB /* GameView.swift in Sources */,
+				F21CE4962CDAD420005004CB /* GridView.swift in Sources */,
+				F21CE4972CDAD420005004CB /* TileSelectionPath.swift in Sources */,
+				F21CE4982CDAD420005004CB /* TileView.swift in Sources */,
+				F21CE4992CDAD420005004CB /* WordTilesApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

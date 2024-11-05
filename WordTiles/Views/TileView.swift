@@ -15,10 +15,11 @@ struct TileView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(isSelected ? Color.blue.opacity(0.3) : Color.gray.opacity(0.2))
+                .fill(isSelected ? .blue.opacity(0.3) : .gray.opacity(0.2))
                 .cornerRadius(8)
             Text(letter)
                 .font(.largeTitle)
+                .minimumScaleFactor(0.1)
         }
         .contentShape(Rectangle())
         .overlay(
@@ -29,7 +30,6 @@ struct TileView: View {
                 )
             }
         )
-        .preference(key: TileLetterPreferenceKey.self, value: [gridPosition: letter])
     }
 }
 
