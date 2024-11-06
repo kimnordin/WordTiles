@@ -7,9 +7,21 @@
 
 import Foundation
 
-struct Tile: Identifiable {
+class Tile: Identifiable, ObservableObject {
     let id = UUID()
     let letter: Letter
-    let row: Int
+    @Published var row: Int
     let column: Int
+    
+    init(letter: Letter, row: Int, column: Int) {
+        self.letter = letter
+        self.row = row
+        self.column = column
+    }
+}
+
+extension Tile: Equatable {
+    static func == (lhs: Tile, rhs: Tile) -> Bool {
+        lhs.id == rhs.id
+    }
 }

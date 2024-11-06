@@ -17,46 +17,32 @@ struct GridView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let viewWidth = geometry.size.width
-            let viewHeight = geometry.size.height
-            let tileWidth = (viewWidth - (tileSpacing * CGFloat(columns))) / CGFloat(columns)
-            let tileHeight = (viewHeight - (tileSpacing * CGFloat(rows))) / CGFloat(rows)
+            let availableWidth = geometry.size.width
+            let availableHeight = geometry.size.height
+            
+            let tileWidth = (availableWidth - (tileSpacing * CGFloat(columns - 1))) / CGFloat(columns)
+            let tileHeight = (availableHeight - (tileSpacing * CGFloat(rows - 1))) / CGFloat(rows)
+            
             let tileSize = min(tileWidth, tileHeight)
             
-            let tilesByRow = groupTilesByRow(tiles: tiles, rows: rows, columns: columns)
-            
-            VStack {
-                Spacer()
-                ForEach(0..<rows, id: \.self) { rowIndex in
-                    HStack {
-                        if rowIndex < tilesByRow.count {
-                            let rowTiles = tilesByRow[rowIndex]
-                            
-                            ForEach(rowTiles) { tile in
-                                let isSelected = selectedPositions.contains(CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row)))
-                                let position = CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))
-                                
-                                TileView(letter: tile.letter, isSelected: isSelected, gridPosition: position)
-                                    .frame(width: tileSize, height: tileSize)
-                                    .animation(.default, value: tile.row)
-                            }
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
+            ZStack {
+                ForEach(tiles) { tile in
+                    let position = CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))
+                    TileView(
+                        letter: tile.letter,
+                        isSelected: selectedPositions.contains(position),
+                        gridPosition: position
+                    )
+                    .frame(width: tileSize, height: tileSize)
+                    .position(
+                        x: CGFloat(tile.column) * (tileSize + tileSpacing) + tileSize / 2,
+                        y: CGFloat(tile.row) * (tileSize + tileSpacing) + tileSize / 2
+                    )
+                    .animation(.default, value: tile.row)
                 }
             }
+            .frame(width: availableWidth, height: availableHeight, alignment: .topLeading)
         }
-    }
-    
-    private func groupTilesByRow(tiles: [Tile], rows: Int, columns: Int) -> [[Tile]] {
-        var groupedTiles: [[Tile]] = Array(repeating: [], count: rows)
-        
-        for tile in tiles {
-            if tile.row < rows && tile.column < columns {
-                groupedTiles[tile.row].append(tile)
-            }
-        }
-        return groupedTiles
     }
 }
 

@@ -26,7 +26,7 @@ struct GameView: View {
     @State private var completedWords: [CompletedWord] = []
     
     @State private var selectedPositions: [CGPoint] = []
-    @State private var selectedLetters: [Letter] = []
+    @State private var selectedTiles: [Tile] = []
     @State private var tileFrames: [CGPoint: CGRect] = [:]
     
     var body: some View {
@@ -82,9 +82,7 @@ struct GameView: View {
                         Text("\(completedWord.word) +\(completedWord.points)")
                     }
                 }
-                .frame(maxWidth: .infinity,
-                       minHeight: geometry.size.height,
-                       alignment: .bottomLeading)
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height, alignment: .bottomLeading)
             }
         }
     }
@@ -118,17 +116,19 @@ struct GameView: View {
     }
     
     private func completeWord() {
-        let selectedWord = selectedLetters.map { $0.character }.joined()
-        if !completedWords.contains(where: { $0.word == selectedWord }), selectedLetters.count > 1 {
+        let selectedWord = selectedTiles.map { $0.letter.character }.joined()
+        if !completedWords.contains(where: { $0.word == selectedWord }), selectedTiles.count > 1 {
             WordValidator.shared.validateWord(selectedWord) { isValid in
                 if isValid {
-                    let points = selectedLetters.reduce(0) { partialResult, letter in
-                        partialResult + letter.points
+                    let points = selectedTiles.reduce(0) { partialResult, tile in
+                        partialResult + tile.letter.points
                     }
                     score += points
                     
                     let completedWord = CompletedWord(word: selectedWord, points: points)
                     completedWords.append(completedWord)
+                    
+                    moveDownTiles(selectedTiles)
                     
                     print("Valid word: \(completedWord.word) (+\(completedWord.points) points)")
                 } else {
@@ -141,7 +141,7 @@ struct GameView: View {
     
     private func clearSelection() {
         selectedPositions.removeAll()
-        selectedLetters.removeAll()
+        selectedTiles.removeAll()
     }
     
     private func resetGame() {
@@ -151,35 +151,51 @@ struct GameView: View {
         generateGrid(rows: rows, columns: columns)
     }
     
+    private func moveDownTiles(_ selectedTiles: [Tile]) {
+        for selectedTile in selectedTiles {
+            guard let tileToRemove = tiles.first(where: { $0 == selectedTile }) else { return }
+            var rowCount = tileToRemove.row
+            var tilesToMove: [Tile] = []
+            
+            while rowCount > 0 {
+                rowCount -= 1
+                if let tileToMove = tiles.first(where: { $0.row == rowCount && $0.column == tileToRemove.column }) {
+                    tilesToMove.append(tileToMove)
+                }
+            }
+            
+            for tileIndex in tiles.indices where tilesToMove.contains(tiles[tileIndex]) {
+                tiles[tileIndex].row += 1
+            }
+            
+            tiles.removeAll(where: { $0 == tileToRemove })
+        }
+    }
+    
     private func isAdjacent(_ pos1: CGPoint, _ pos2: CGPoint) -> Bool {
         let dx = abs(Int(pos1.x - pos2.x))
         let dy = abs(Int(pos1.y - pos2.y))
         return (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
     }
     
+    
     private func handleTileSelection(at position: CGPoint) {
         if let lastPosition = selectedPositions.last {
             if position == lastPosition {
                 return
-            } else if selectedPositions.count >= 2,
-                      position == selectedPositions[selectedPositions.count - 2] {
+            } else if selectedPositions.count >= 2, position == selectedPositions[selectedPositions.count - 2] {
                 selectedPositions.removeLast()
-                selectedLetters.removeLast()
-            } else if isAdjacent(lastPosition, position) &&
-                        !selectedPositions.contains(position) {
+                selectedTiles.removeLast()
+            } else if isAdjacent(lastPosition, position) && !selectedPositions.contains(position) {
                 selectedPositions.append(position)
-                if let tile = tiles.first(where: {
-                    $0.row == Int(position.y) && $0.column == Int(position.x)
-                }) {
-                    selectedLetters.append(tile.letter)
+                if let tile = tiles.first(where: { $0.row == Int(position.y) && $0.column == Int(position.x) }) {
+                    selectedTiles.append(tile)
                 }
             }
         } else {
             selectedPositions.append(position)
-            if let tile = tiles.first(where: {
-                $0.row == Int(position.y) && $0.column == Int(position.x)
-            }) {
-                selectedLetters.append(tile.letter)
+            if let tile = tiles.first(where: { $0.row == Int(position.y) && $0.column == Int(position.x) }) {
+                selectedTiles.append(tile)
             }
         }
     }
