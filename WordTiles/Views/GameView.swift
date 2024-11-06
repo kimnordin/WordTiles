@@ -183,14 +183,8 @@ struct GameView: View {
     
     private func moveDownTiles(_ selectedTiles: [Tile]) {
         for selectedTile in selectedTiles {
-            var rowCount = selectedTile.row
-            
-            while rowCount > -1 {
-                rowCount -= 1
-                
-                if let tileToMove = tiles.first(where: { $0.row == rowCount && $0.column == selectedTile.column }) {
-                    tileToMove.row += 1
-                }
+            for tile in tiles where tile.column == selectedTile.column && tile.row < selectedTile.row {
+                tile.row += 1
             }
             
             tiles.removeAll(where: { $0 == selectedTile })
