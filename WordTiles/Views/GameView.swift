@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GameView: View {
     private let rows = 6
-    private let columns = 6
+    private let columns = 4
     
     private let letters = [
         Letter(character: "A"), Letter(character: "B"), Letter(character: "C"), Letter(character: "D"),
@@ -39,7 +39,7 @@ struct GameView: View {
     @State private var tileFrames: [CGPoint: CGRect] = [:]
     
     var body: some View {
-        VStack {
+        GeometryReader { geometry in
             VStack {
                 ZStack {
                     Text("Score: \(score)")
@@ -57,28 +57,28 @@ struct GameView: View {
                     }
                 }
                 CompletedWordsView
+                ZStack {
+                    GridView(tiles: tiles, rows: rows, columns: columns, maxHeight: geometry.size.height/2, selectedPositions: $selectedPositions)
+                    TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
+                }
+                .coordinateSpace(name: "GameView")
+                .onAppear {
+                    generateGrid(rows: rows, columns: columns)
+                }
+                .onPreferenceChange(TileSelectionPreferenceKey.self) { preferences in
+                    self.tileFrames = preferences
+                }
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged {
+                            selectTile(at: $0.location)
+                        }
+                        .onEnded { _ in
+                            completeWord()
+                        }
+                )
             }
-            .padding()
-            ZStack {
-                GridView(tiles: tiles, rows: rows, columns: columns, selectedPositions: $selectedPositions)
-                TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
-            }
-            .coordinateSpace(name: "GameView")
-            .onAppear {
-                generateGrid(rows: rows, columns: columns)
-            }
-            .onPreferenceChange(TileSelectionPreferenceKey.self) { preferences in
-                self.tileFrames = preferences
-            }
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged {
-                        selectTile(at: $0.location)
-                    }
-                    .onEnded { _ in
-                        completeWord()
-                    }
-            )
+//            .padding()
         }
     }
     
@@ -183,11 +183,11 @@ struct GameView: View {
         for selectedTile in selectedTiles {
             var rowCount = selectedTile.row
             
-            while rowCount > 0 {
+            while rowCount > -1 {
                 rowCount -= 1
+                
                 if let tileToMove = tiles.first(where: { $0.row == rowCount && $0.column == selectedTile.column }) {
                     tileToMove.row += 1
-                    addNewTile(selectedTile)
                 }
             }
             
@@ -196,14 +196,16 @@ struct GameView: View {
     }
     
     private func addNewTile(_ selectedTile: Tile) {
-        let randomTile = generateRandomTile(row: 0, column: selectedTile.column)
-        tiles.append(randomTile)
+        withAnimation {
+            let randomTile = generateRandomTile(row: 0, column: selectedTile.column)
+            tiles.append(randomTile)
+        }
     }
     
-    private func isAdjacentTile(_ pos1: CGPoint, _ pos2: CGPoint) -> Bool {
-        let dx = abs(Int(pos1.x - pos2.x))
-        let dy = abs(Int(pos1.y - pos2.y))
-        return (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
+    private func isAdjacentTile(_ firstTilePosition: CGPoint, _ secondTilePosition: CGPoint) -> Bool {
+        let deltaX = abs(Int(firstTilePosition.x - secondTilePosition.x))
+        let deltaY = abs(Int(firstTilePosition.y - secondTilePosition.y))
+        return (deltaX <= 1 && deltaY <= 1) && !(deltaX == 0 && deltaY == 0)
     }
 }
 
