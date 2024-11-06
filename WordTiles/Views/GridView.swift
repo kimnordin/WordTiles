@@ -71,6 +71,6 @@ struct GridView: View {
 }
 
 #Preview {
-    GridView(tiles: [Tile(letter: Letter(character: "A", frequency: 8.12), row: 0, column: 0), Tile(letter: Letter(character: "B", frequency: 1.49), row: 0, column: 1), Tile(letter: Letter(character: "C", frequency: 2.71), row: 0, column: 2)],
+    GridView(tiles: [Tile(letter: Letter(character: "A"), row: 0, column: 0), Tile(letter: Letter(character: "B"), row: 0, column: 1), Tile(letter: Letter(character: "C"), row: 0, column: 2)],
              rows: 2, columns: 3, selectedPositions: .constant([CGPoint.zero]))
 }

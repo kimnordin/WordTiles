@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct GameView: View {
-    private let rows = 5
-    private let columns = 5
+    private let rows = 6
+    private let columns = 6
     
     private let letters = [
-        Letter(character: "E", frequency: 12.0), Letter(character: "T", frequency: 9.1), Letter(character: "A", frequency: 8.1), Letter(character: "O", frequency: 7.6), Letter(character: "I", frequency: 7.3),
-        Letter(character: "N", frequency: 6.9), Letter(character: "S", frequency: 6.2), Letter(character: "R", frequency: 6.0), Letter(character: "H", frequency: 5.9), Letter(character: "D", frequency: 4.3),
-        Letter(character: "L", frequency: 3.9), Letter(character: "U", frequency: 2.8), Letter(character: "C", frequency: 2.7), Letter(character: "M", frequency: 2.6), Letter(character: "F", frequency: 2.3),
-        Letter(character: "Y", frequency: 2.1), Letter(character: "W", frequency: 2.0), Letter(character: "G", frequency: 2.0), Letter(character: "P", frequency: 1.8), Letter(character: "B", frequency: 1.4),
-        Letter(character: "V", frequency: 1.1), Letter(character: "K", frequency: 0.6), Letter(character: "X", frequency: 0.1), Letter(character: "Q", frequency: 0.1), Letter(character: "J", frequency: 0.1),
-        Letter(character: "Z", frequency: 0.07)
+        Letter(character: "A"), Letter(character: "B"), Letter(character: "C"), Letter(character: "D"),
+        Letter(character: "E"), Letter(character: "F"), Letter(character: "G"), Letter(character: "H"),
+        Letter(character: "I"), Letter(character: "J"), Letter(character: "K"), Letter(character: "L"),
+        Letter(character: "M"), Letter(character: "N"), Letter(character: "O"), Letter(character: "P"),
+        Letter(character: "Q"), Letter(character: "R"), Letter(character: "S"), Letter(character: "T"),
+        Letter(character: "U"), Letter(character: "V"), Letter(character: "W"), Letter(character: "X"),
+        Letter(character: "Y"), Letter(character: "Z")
     ]
     
     @State private var score: Int = 0
