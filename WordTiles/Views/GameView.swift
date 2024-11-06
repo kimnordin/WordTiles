@@ -96,6 +96,18 @@ struct GameView: View {
         }
     }
     
+    private func clearSelection() {
+        selectedPositions.removeAll()
+        selectedTiles.removeAll()
+    }
+    
+    private func resetGame() {
+        score = 0
+        completedWords = []
+        clearSelection()
+        generateGrid(rows: rows, columns: columns)
+    }
+    
     private func generateGrid(rows: Int, columns: Int) {
         var generatedTiles: [Tile] = []
         for row in 0..<rows {
@@ -122,16 +134,25 @@ struct GameView: View {
         }
     }
     
-    private func clearSelection() {
-        selectedPositions.removeAll()
-        selectedTiles.removeAll()
-    }
-    
-    private func resetGame() {
-        score = 0
-        completedWords = []
-        clearSelection()
-        generateGrid(rows: rows, columns: columns)
+    private func handleTileSelection(at position: CGPoint) {
+        if let lastPosition = selectedPositions.last {
+            if position == lastPosition {
+                return
+            } else if selectedPositions.count >= 2, position == selectedPositions[selectedPositions.count - 2] {
+                selectedPositions.removeLast()
+                selectedTiles.removeLast()
+            } else if isAdjacentTile(lastPosition, position) && !selectedPositions.contains(position) {
+                selectedPositions.append(position)
+                if let tile = tiles.first(where: { $0.row == Int(position.y) && $0.column == Int(position.x) }) {
+                    selectedTiles.append(tile)
+                }
+            }
+        } else {
+            selectedPositions.append(position)
+            if let tile = tiles.first(where: { $0.row == Int(position.y) && $0.column == Int(position.x) }) {
+                selectedTiles.append(tile)
+            }
+        }
     }
     
     private func completeWord() {
@@ -179,31 +200,10 @@ struct GameView: View {
         tiles.append(randomTile)
     }
     
-    private func isAdjacent(_ pos1: CGPoint, _ pos2: CGPoint) -> Bool {
+    private func isAdjacentTile(_ pos1: CGPoint, _ pos2: CGPoint) -> Bool {
         let dx = abs(Int(pos1.x - pos2.x))
         let dy = abs(Int(pos1.y - pos2.y))
         return (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
-    }
-    
-    private func handleTileSelection(at position: CGPoint) {
-        if let lastPosition = selectedPositions.last {
-            if position == lastPosition {
-                return
-            } else if selectedPositions.count >= 2, position == selectedPositions[selectedPositions.count - 2] {
-                selectedPositions.removeLast()
-                selectedTiles.removeLast()
-            } else if isAdjacent(lastPosition, position) && !selectedPositions.contains(position) {
-                selectedPositions.append(position)
-                if let tile = tiles.first(where: { $0.row == Int(position.y) && $0.column == Int(position.x) }) {
-                    selectedTiles.append(tile)
-                }
-            }
-        } else {
-            selectedPositions.append(position)
-            if let tile = tiles.first(where: { $0.row == Int(position.y) && $0.column == Int(position.x) }) {
-                selectedTiles.append(tile)
-            }
-        }
     }
 }
 
