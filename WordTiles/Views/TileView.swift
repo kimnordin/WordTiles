@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TileView: View {
-    let letter: String
+    let letter: Letter
     var isSelected: Bool
     let gridPosition: CGPoint
 
@@ -17,7 +17,7 @@ struct TileView: View {
             Rectangle()
                 .fill(isSelected ? .blue.opacity(0.3) : .gray.opacity(0.2))
                 .cornerRadius(8)
-            Text(letter)
+            Text(letter.character)
                 .font(.largeTitle)
                 .minimumScaleFactor(0.1)
         }
@@ -34,5 +34,5 @@ struct TileView: View {
 }
 
 #Preview {
-    TileView(letter: "Q", isSelected: true, gridPosition: CGPoint.zero)
+    TileView(letter: Letter(character: "Q", frequency: 0.11, points: 8), isSelected: true, gridPosition: CGPoint.zero)
 }

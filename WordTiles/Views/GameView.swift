@@ -11,20 +11,21 @@ struct GameView: View {
     private let rows = 5
     private let columns = 5
     
-    private let letterFrequencies = [
-        ("E", 12.02), ("T", 9.10), ("A", 8.12), ("O", 7.68), ("I", 7.31),
-        ("N", 6.95), ("S", 6.28), ("R", 6.02), ("H", 5.92), ("D", 4.32),
-        ("L", 3.98), ("U", 2.88), ("C", 2.71), ("M", 2.61), ("F", 2.30),
-        ("Y", 2.11), ("W", 2.09), ("G", 2.03), ("P", 1.82), ("B", 1.49),
-        ("V", 1.11), ("K", 0.69), ("X", 0.17), ("Q", 0.11), ("J", 0.10), ("Z", 0.07)
+    private let letters = [
+        Letter(character: "E", frequency: 12.02, points: 1), Letter(character: "T", frequency: 9.10, points: 1), Letter(character: "A", frequency: 8.12, points: 1), Letter(character: "O", frequency: 7.68, points: 2), Letter(character: "I", frequency: 7.31, points: 2),
+        Letter(character: "N", frequency: 6.95, points: 2), Letter(character: "S", frequency: 6.28, points: 2), Letter(character: "R", frequency: 6.02, points: 2), Letter(character: "H", frequency: 5.92, points: 3), Letter(character: "D", frequency: 4.32, points: 3),
+        Letter(character: "L", frequency: 3.98, points: 3), Letter(character: "U", frequency: 2.88, points: 4), Letter(character: "C", frequency: 2.71, points: 4), Letter(character: "M", frequency: 2.61, points: 4), Letter(character: "F", frequency: 2.30, points: 4),
+        Letter(character: "Y", frequency: 2.11, points: 5), Letter(character: "W", frequency: 2.09, points: 5), Letter(character: "G", frequency: 2.03, points: 5), Letter(character: "P", frequency: 1.82, points: 6), Letter(character: "B", frequency: 1.49, points: 6),
+        Letter(character: "V", frequency: 1.11, points: 6), Letter(character: "K", frequency: 0.69, points: 6), Letter(character: "X", frequency: 0.17, points: 7), Letter(character: "Q", frequency: 0.11, points: 8), Letter(character: "J", frequency: 0.10, points: 9),
+        Letter(character: "Z", frequency: 0.07, points: 10)
     ]
     
     @State private var score: Int = 0
     @State private var tiles: [Tile] = []
-    @State private var completedWords: [String] = []
+    @State private var completedWords: [CompletedWord] = []
     
     @State private var selectedPositions: [CGPoint] = []
-    @State private var selectedLetters: [String] = []
+    @State private var selectedLetters: [Letter] = []
     @State private var tileFrames: [CGPoint: CGRect] = [:]
     
     var body: some View {
@@ -49,7 +50,7 @@ struct GameView: View {
                     VStack(alignment: .leading) {
                         ForEach(completedWords.indices, id: \.self) { completedWordIndex in
                             let completedWord = completedWords[completedWordIndex]
-                            Text(completedWord)
+                            Text("\(completedWord.word) +\(completedWord.points)")
                         }
                     }
                     .frame(maxWidth: .infinity,
@@ -61,7 +62,6 @@ struct GameView: View {
                 GridView(tiles: tiles, rows: rows, columns: columns, selectedPositions: $selectedPositions)
                 TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
             }
-            .background(.white)
             .coordinateSpace(name: "GameView")
             .onAppear {
                 generateGrid(rows: rows, columns: columns)
@@ -83,9 +83,9 @@ struct GameView: View {
     }
     
     private func generateGrid(rows: Int, columns: Int) {
-        var lettersArray: [String] = []
-        for (letter, frequency) in letterFrequencies {
-            let count = Int(frequency * 10)
+        var lettersArray: [Letter] = []
+        for letter in letters {
+            let count = Int(letter.frequency * 10)
             lettersArray += Array(repeating: letter, count: count)
         }
         
@@ -111,24 +111,25 @@ struct GameView: View {
     }
     
     private func completeWord() {
-        let selectedWord = selectedLetters.joined()
-        if !completedWords.contains(selectedWord) {
+        let selectedWord = selectedLetters.map { $0.character }.joined()
+        if !completedWords.contains(where: { $0.word == selectedWord }), selectedLetters.count > 1 {
             WordValidator.shared.validateWord(selectedWord) { isValid in
                 if isValid {
-                    let points = selectedWord.count
+                    let points = selectedLetters.reduce(0) { partialResult, letter in
+                        partialResult + letter.points
+                    }
                     score += points
-                    completedWords.append(selectedWord)
                     
-                    print("Valid word: \(selectedWord) (+\(points) points)")
+                    let completedWord = CompletedWord(word: selectedWord, points: points)
+                    completedWords.append(completedWord)
+                    
+                    print("Valid word: \(completedWord.word) (+\(completedWord.points) points)")
                 } else {
                     print("Invalid word: \(selectedWord)")
                 }
             }
-            clearSelection()
-        } else {
-            print("Word already guessed: \(selectedWord)")
-            clearSelection()
         }
+        clearSelection()
     }
     
     private func clearSelection() {

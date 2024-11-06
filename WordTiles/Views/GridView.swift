@@ -24,33 +24,27 @@ struct GridView: View {
             let tileHeight = (availableHeight - (spacing * CGFloat(rows - 1))) / CGFloat(rows)
             let tileSize = min(tileWidth, tileHeight)
 
-            VStack(spacing: spacing) {
-                ForEach(0..<rows, id: \.self) { row in
-                    HStack(spacing: spacing) {
-                        ForEach(0..<columns, id: \.self) { column in
-                            if let tile = tiles.first(where: {
-                                $0.row == row && $0.column == column
-                            }) {
-                                let position = CGPoint(x: CGFloat(column), y: CGFloat(row))
-                                TileView(
-                                    letter: tile.letter,
-                                    isSelected: selectedPositions.contains(position),
-                                    gridPosition: position
-                                )
-                                .frame(width: tileSize, height: tileSize)
-                            } else {
-                                Spacer()
-                                    .frame(width: tileSize, height: tileSize)
-                            }
-                        }
-                    }
+            ZStack {
+                ForEach(tiles) { tile in
+                    let position = CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))
+                    TileView(
+                        letter: tile.letter,
+                        isSelected: selectedPositions.contains(position),
+                        gridPosition: position
+                    )
+                    .frame(width: tileSize, height: tileSize)
+                    .position(
+                        x: CGFloat(tile.column) * (tileSize + spacing) + tileSize / 2,
+                        y: CGFloat(tile.row) * (tileSize + spacing) + tileSize / 2
+                    )
+                    .animation(.default, value: tile.row)
                 }
             }
-            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+            .frame(width: availableWidth, height: availableHeight, alignment: .topLeading)
         }
     }
 }
 
 #Preview {
-    GridView(tiles: [Tile(letter: "A", row: 0, column: 0), Tile(letter: "B", row: 0, column: 1), Tile(letter: "C", row: 0, column: 2)], rows: 1, columns: 3, selectedPositions: .constant([CGPoint.zero]))
+    GridView(tiles: [Tile(letter: Letter(character: "A", frequency: 8.12, points: 1), row: 0, column: 0), Tile(letter: Letter(character: "B", frequency: 1.49, points: 6), row: 0, column: 1), Tile(letter: Letter(character: "C", frequency: 2.71, points: 4), row: 0, column: 2)], rows: 1, columns: 3, selectedPositions: .constant([CGPoint.zero]))
 }
