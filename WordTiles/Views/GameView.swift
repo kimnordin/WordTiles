@@ -31,22 +31,25 @@ struct GameView: View {
     
     var body: some View {
         VStack {
-            ZStack {
-                Text("Score: \(score)")
-                    .font(.title)
-                    .frame(maxWidth: .infinity)
-                HStack {
-                    Spacer()
-                    Button {
-                        resetGame()
-                    } label: {
-                        Image(systemName: "arrow.trianglehead.2.counterclockwise")
-                            .font(.title)
+            VStack {
+                ZStack {
+                    Text("Score: \(score)")
+                        .font(.title)
+                        .frame(maxWidth: .infinity)
+                    HStack {
+                        Spacer()
+                        Button {
+                            resetGame()
+                        } label: {
+                            Image(systemName: "arrow.trianglehead.2.counterclockwise")
+                                .font(.title)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
+                CompletedWordsView
             }
-            CompletedWordsView
+            .padding()
             ZStack {
                 GridView(tiles: tiles, rows: rows, columns: columns, selectedPositions: $selectedPositions)
                 TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
@@ -68,7 +71,6 @@ struct GameView: View {
                     }
             )
         }
-        .padding()
     }
     
     @ViewBuilder private var CompletedWordsView: some View {

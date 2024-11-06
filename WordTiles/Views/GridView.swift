@@ -28,7 +28,7 @@ struct GridView: View {
             VStack {
                 Spacer()
                 ForEach(0..<rows, id: \.self) { rowIndex in
-                    HStack(spacing: tileSpacing) {
+                    HStack {
                         if rowIndex < tilesByRow.count {
                             let rowTiles = tilesByRow[rowIndex]
                             ForEach(rowTiles) { tile in
@@ -43,10 +43,8 @@ struct GridView: View {
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.horizontal, calculateHorizontalPadding(for: tilesByRow[rowIndex], tileSize: tileSize, spacing: tileSpacing, totalWidth: width))
                 }
             }
-            .frame(width: width, height: height, alignment: .bottom)
         }
     }
     
@@ -59,14 +57,6 @@ struct GridView: View {
             }
         }
         return groupedTiles
-    }
-    
-    private func calculateHorizontalPadding(for rowTiles: [Tile], tileSize: CGFloat, spacing: CGFloat, totalWidth: CGFloat) -> CGFloat {
-        let totalTileWidth = CGFloat(rowTiles.count) * tileSize
-        let totalSpacing = CGFloat(rowTiles.count - 1) * spacing
-        let usedWidth = totalTileWidth + totalSpacing
-        let remainingWidth = totalWidth - usedWidth
-        return max(remainingWidth / 2, 0)
     }
 }
 
