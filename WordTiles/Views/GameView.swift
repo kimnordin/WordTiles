@@ -21,6 +21,15 @@ struct GameView: View {
         Letter(character: "Y"), Letter(character: "Z")
     ]
     
+    private var randomLetters: [Letter] {
+        var randomLetters: [Letter] = []
+        for letter in letters {
+            let count = Int(letter.frequency * 10)
+            randomLetters += Array(repeating: letter, count: count)
+        }
+        return randomLetters
+    }
+    
     @State private var score: Int = 0
     @State private var tiles: [Tile] = []
     @State private var completedWords: [CompletedWord] = []
@@ -88,22 +97,20 @@ struct GameView: View {
     }
     
     private func generateGrid(rows: Int, columns: Int) {
-        var lettersArray: [Letter] = []
-        for letter in letters {
-            let count = Int(letter.frequency * 10)
-            lettersArray += Array(repeating: letter, count: count)
-        }
-        
         var generatedTiles: [Tile] = []
         for row in 0..<rows {
             for column in 0..<columns {
-                let randomLetter = lettersArray.randomElement()!
+                let randomLetter = randomLetters.randomElement()!
                 let tile = Tile(letter: randomLetter, row: row, column: column)
                 generatedTiles.append(tile)
             }
         }
         
         tiles = generatedTiles
+    }
+    
+    private func generateRandomTile(row: Int, column: Int) -> Tile {
+        return Tile(letter: randomLetters.randomElement()!, row: row, column: column)
     }
     
     private func selectTile(at point: CGPoint) {
@@ -113,6 +120,18 @@ struct GameView: View {
                 break
             }
         }
+    }
+    
+    private func clearSelection() {
+        selectedPositions.removeAll()
+        selectedTiles.removeAll()
+    }
+    
+    private func resetGame() {
+        score = 0
+        completedWords = []
+        clearSelection()
+        generateGrid(rows: rows, columns: columns)
     }
     
     private func completeWord() {
@@ -139,37 +158,25 @@ struct GameView: View {
         clearSelection()
     }
     
-    private func clearSelection() {
-        selectedPositions.removeAll()
-        selectedTiles.removeAll()
-    }
-    
-    private func resetGame() {
-        score = 0
-        completedWords = []
-        clearSelection()
-        generateGrid(rows: rows, columns: columns)
-    }
-    
     private func moveDownTiles(_ selectedTiles: [Tile]) {
         for selectedTile in selectedTiles {
-            guard let tileToRemove = tiles.first(where: { $0 == selectedTile }) else { return }
-            var rowCount = tileToRemove.row
-            var tilesToMove: [Tile] = []
+            var rowCount = selectedTile.row
             
             while rowCount > 0 {
                 rowCount -= 1
-                if let tileToMove = tiles.first(where: { $0.row == rowCount && $0.column == tileToRemove.column }) {
-                    tilesToMove.append(tileToMove)
+                if let tileToMove = tiles.first(where: { $0.row == rowCount && $0.column == selectedTile.column }) {
+                    tileToMove.row += 1
+                    addNewTile(selectedTile)
                 }
             }
             
-            for tileIndex in tiles.indices where tilesToMove.contains(tiles[tileIndex]) {
-                tiles[tileIndex].row += 1
-            }
-            
-            tiles.removeAll(where: { $0 == tileToRemove })
+            tiles.removeAll(where: { $0 == selectedTile })
         }
+    }
+    
+    private func addNewTile(_ selectedTile: Tile) {
+        let randomTile = generateRandomTile(row: 0, column: selectedTile.column)
+        tiles.append(randomTile)
     }
     
     private func isAdjacent(_ pos1: CGPoint, _ pos2: CGPoint) -> Bool {
@@ -177,7 +184,6 @@ struct GameView: View {
         let dy = abs(Int(pos1.y - pos2.y))
         return (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
     }
-    
     
     private func handleTileSelection(at position: CGPoint) {
         if let lastPosition = selectedPositions.last {

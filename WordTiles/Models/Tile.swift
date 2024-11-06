@@ -7,10 +7,10 @@
 
 import Foundation
 
-class Tile: Identifiable, ObservableObject {
+class Tile: Identifiable {
     let id = UUID()
     let letter: Letter
-    @Published var row: Int
+    var row: Int
     let column: Int
     
     init(letter: Letter, row: Int, column: Int) {
