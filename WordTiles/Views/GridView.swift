@@ -13,7 +13,6 @@ struct GridView: View {
     let columns: Int
     var maxHeight: CGFloat
     private let tileSpacing: CGFloat = 10
-    private let bottomPadding: CGFloat = 25
     
     @Binding var selectedPositions: [CGPoint]
     
@@ -32,7 +31,7 @@ struct GridView: View {
             .frame(width: tileSize.width, height: tileSize.height)
             .position(
                 x: tilePosition(tileSize: tileSize.width, alignment: tile.column, spacing: tileSpacing) + gridOffset.width,
-                y: (tilePosition(tileSize: tileSize.height, alignment: tile.row, spacing: tileSpacing) + gridOffset.height) - bottomPadding
+                y: (tilePosition(tileSize: tileSize.height, alignment: tile.row, spacing: tileSpacing) + gridOffset.height)
             )
             .animation(.default, value: tile.row)
         }
@@ -72,5 +71,5 @@ struct GridView: View {
 }
 
 #Preview {
-    GameView()
+    GridView(tiles: [Tile(letter: Letter(character: "A"), row: 0, column: 0), Tile(letter: Letter(character: "B"), row: 0, column: 1), Tile(letter: Letter(character: "C"), row: 0, column: 2)], rows: 1, columns: 3, maxHeight: 150, selectedPositions: .constant([CGPoint.zero]))
 }
