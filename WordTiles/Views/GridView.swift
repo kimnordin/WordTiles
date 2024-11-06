@@ -11,42 +11,66 @@ struct GridView: View {
     let tiles: [Tile]
     let rows: Int
     let columns: Int
+    var maxHeight: CGFloat
     private let tileSpacing: CGFloat = 10
+    private let bottomPadding: CGFloat = 25
     
     @Binding var selectedPositions: [CGPoint]
     
     var body: some View {
-        GeometryReader { geometry in
-            let availableWidth = geometry.size.width
-            let availableHeight = geometry.size.height
-            
-            let tileWidth = (availableWidth - (tileSpacing * CGFloat(columns - 1))) / CGFloat(columns)
-            let tileHeight = (availableHeight - (tileSpacing * CGFloat(rows - 1))) / CGFloat(rows)
-            
-            let tileSize = min(tileWidth, tileHeight)
-            
-            ZStack {
-                ForEach(tiles) { tile in
-                    let position = CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))
-                    TileView(
-                        letter: tile.letter,
-                        isSelected: selectedPositions.contains(position),
-                        gridPosition: position
-                    )
-                    .frame(width: tileSize, height: tileSize)
-                    .position(
-                        x: CGFloat(tile.column) * (tileSize + tileSpacing) + tileSize / 2,
-                        y: CGFloat(tile.row) * (tileSize + tileSpacing) + tileSize / 2
-                    )
-                    .animation(.default, value: tile.row)
-                }
-            }
-            .frame(width: availableWidth, height: availableHeight, alignment: .topLeading)
+        let gridSize = min(maxHeight, maxHeight)
+        let tileSize = preferredTileSize(gridSize: gridSize, spacing: tileSpacing, rows: rows, columns: columns)
+        let gridOffset = gridOffset(gridSize: gridSize, tileSize: tileSize, rows: rows, columns: columns)
+        
+        ForEach(tiles) { tile in
+            let position = CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))
+            TileView(
+                letter: tile.letter,
+                isSelected: selectedPositions.contains(position),
+                gridPosition: position
+            )
+            .frame(width: tileSize.width, height: tileSize.height)
+            .position(
+                x: tilePosition(tileSize: tileSize.width, alignment: tile.column, spacing: tileSpacing) + gridOffset.width,
+                y: (tilePosition(tileSize: tileSize.height, alignment: tile.row, spacing: tileSpacing) + gridOffset.height) - bottomPadding
+            )
+            .animation(.default, value: tile.row)
         }
+    }
+    
+    private func tilePosition(tileSize: CGFloat, alignment: Int, spacing: CGFloat) -> CGFloat {
+        return (CGFloat(alignment) * (tileSize + spacing) + tileSize / 2) + spacing
+    }
+    
+    private func gridOffset(gridSize: CGFloat, tileSize: CGSize, rows: Int, columns: Int) -> CGSize {
+        var offset = CGSize(width: 0, height: 0)
+        if rows > columns {
+            offset = CGSize(width: (gridSize - (CGFloat(columns) * (tileSize.width + tileSpacing))) / 2, height: 0)
+        } else if columns > rows {
+            offset = CGSize(width: 0, height: gridSize - (CGFloat(rows) * (tileSize.height + tileSpacing)))
+        }
+        return offset
+    }
+    
+    private func preferredTileSize(gridSize: CGFloat, spacing: CGFloat, rows: Int, columns: Int) -> CGSize {
+        let tileSize: CGSize
+        if rows > columns {
+            let size = gridSize / CGFloat(rows)
+            tileSize = CGSize(width: size, height: size)
+        } else if columns > rows {
+            let size = gridSize / CGFloat(columns)
+            tileSize = CGSize(width: size, height: size)
+        } else {
+            let size = gridSize / CGFloat(columns)
+            tileSize = CGSize(width: size, height: size)
+        }
+        
+        let spacedTileSize: CGSize = CGSize(width: tileSize.width - spacing, height: tileSize.height - spacing)
+        
+        return spacedTileSize
     }
 }
 
 #Preview {
-    GridView(tiles: [Tile(letter: Letter(character: "A"), row: 0, column: 0), Tile(letter: Letter(character: "B"), row: 0, column: 1), Tile(letter: Letter(character: "C"), row: 0, column: 2)],
-             rows: 2, columns: 3, selectedPositions: .constant([CGPoint.zero]))
+    GameView()
 }
