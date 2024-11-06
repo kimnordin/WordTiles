@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GameView: View {
     private let rows = 6
-    private let columns = 4
+    private let columns = 6
     
     private let letters = [
         Letter(character: "A"), Letter(character: "B"), Letter(character: "C"), Letter(character: "D"),
@@ -58,7 +58,7 @@ struct GameView: View {
                 }
                 CompletedWordsView
                 ZStack {
-                    GridView(tiles: tiles, rows: rows, columns: columns, maxHeight: geometry.size.height/2, selectedPositions: $selectedPositions)
+                    GridView(tiles: tiles, rows: rows, columns: columns, maxHeight: geometry.size.height / 2, selectedPositions: $selectedPositions)
                     TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
                 }
                 .coordinateSpace(name: "GameView")
