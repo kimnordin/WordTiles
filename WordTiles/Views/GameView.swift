@@ -45,19 +45,7 @@ struct GameView: View {
                     .buttonStyle(.plain)
                 }
             }
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        ForEach(completedWords.indices, id: \.self) { completedWordIndex in
-                            let completedWord = completedWords[completedWordIndex]
-                            Text("\(completedWord.word) +\(completedWord.points)")
-                        }
-                    }
-                    .frame(maxWidth: .infinity,
-                           minHeight: geometry.size.height,
-                           alignment: .bottomLeading)
-                }
-            }
+            CompletedWordsView
             ZStack {
                 GridView(tiles: tiles, rows: rows, columns: columns, selectedPositions: $selectedPositions)
                 TileSelectionPath(selectedPositions: $selectedPositions, tileFrames: $tileFrames)
@@ -80,6 +68,22 @@ struct GameView: View {
             )
         }
         .padding()
+    }
+    
+    @ViewBuilder private var CompletedWordsView: some View {
+        GeometryReader { geometry in
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading) {
+                    ForEach(completedWords.indices, id: \.self) { completedWordIndex in
+                        let completedWord = completedWords[completedWordIndex]
+                        Text("\(completedWord.word) +\(completedWord.points)")
+                    }
+                }
+                .frame(maxWidth: .infinity,
+                       minHeight: geometry.size.height,
+                       alignment: .bottomLeading)
+            }
+        }
     }
     
     private func generateGrid(rows: Int, columns: Int) {
