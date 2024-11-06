@@ -17,10 +17,10 @@ struct GridView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let width = geometry.size.width
-            let height = geometry.size.height
-            let tileWidth = (width - (tileSpacing * CGFloat(columns + 1))) / CGFloat(columns)
-            let tileHeight = (height - (tileSpacing * CGFloat(rows + 1))) / CGFloat(rows)
+            let viewWidth = geometry.size.width
+            let viewHeight = geometry.size.height
+            let tileWidth = (viewWidth - (tileSpacing * CGFloat(columns))) / CGFloat(columns)
+            let tileHeight = (viewHeight - (tileSpacing * CGFloat(rows))) / CGFloat(rows)
             let tileSize = min(tileWidth, tileHeight)
             
             let tilesByRow = groupTilesByRow(tiles: tiles, rows: rows, columns: columns)
@@ -31,14 +31,14 @@ struct GridView: View {
                     HStack {
                         if rowIndex < tilesByRow.count {
                             let rowTiles = tilesByRow[rowIndex]
+                            
                             ForEach(rowTiles) { tile in
-                                TileView(
-                                    letter: tile.letter,
-                                    isSelected: selectedPositions.contains(CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))),
-                                    gridPosition: CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))
-                                )
-                                .frame(width: tileSize, height: tileSize)
-                                .animation(.default, value: tile.row)
+                                let isSelected = selectedPositions.contains(CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row)))
+                                let position = CGPoint(x: CGFloat(tile.column), y: CGFloat(tile.row))
+                                
+                                TileView(letter: tile.letter, isSelected: isSelected, gridPosition: position)
+                                    .frame(width: tileSize, height: tileSize)
+                                    .animation(.default, value: tile.row)
                             }
                         }
                     }
