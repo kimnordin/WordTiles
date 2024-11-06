@@ -25,6 +25,6 @@ struct TileSelectionPath: View {
                 }
             }
         }
-        .stroke(.blue, lineWidth: 5)
+        .stroke(.black, style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
     }
 }

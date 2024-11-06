@@ -15,12 +15,16 @@ struct TileView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(isSelected ? .blue.opacity(0.3) : .gray.opacity(0.2))
-                .cornerRadius(8)
+                .fill(isSelected ? .black.opacity(0.3) : .clear)
+                .background(
+                    Text("\(letter.points)") .font(.subheadline) .padding(.trailing, 3), alignment: .topTrailing
+                )
             Text(letter.character)
                 .font(.largeTitle)
                 .minimumScaleFactor(0.1)
         }
+        .background(letter.color)
+        .cornerRadius(8)
         .contentShape(Rectangle())
         .overlay(
             GeometryReader { geometry in
@@ -34,5 +38,5 @@ struct TileView: View {
 }
 
 #Preview {
-    TileView(letter: Letter(character: "Q", frequency: 0.11, points: 8), isSelected: true, gridPosition: CGPoint.zero)
+    TileView(letter: Letter(character: "Q", frequency: 0.11), isSelected: true, gridPosition: CGPoint.zero)
 }

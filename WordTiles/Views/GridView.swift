@@ -46,5 +46,5 @@ struct GridView: View {
 }
 
 #Preview {
-    GridView(tiles: [Tile(letter: Letter(character: "A", frequency: 8.12, points: 1), row: 0, column: 0), Tile(letter: Letter(character: "B", frequency: 1.49, points: 6), row: 0, column: 1), Tile(letter: Letter(character: "C", frequency: 2.71, points: 4), row: 0, column: 2)], rows: 1, columns: 3, selectedPositions: .constant([CGPoint.zero]))
+    GridView(tiles: [Tile(letter: Letter(character: "A", frequency: 8.12), row: 0, column: 0), Tile(letter: Letter(character: "B", frequency: 1.49), row: 0, column: 1), Tile(letter: Letter(character: "C", frequency: 2.71), row: 0, column: 2)], rows: 1, columns: 3, selectedPositions: .constant([CGPoint.zero]))
 }

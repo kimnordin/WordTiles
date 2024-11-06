@@ -12,12 +12,12 @@ struct GameView: View {
     private let columns = 5
     
     private let letters = [
-        Letter(character: "E", frequency: 12.02, points: 1), Letter(character: "T", frequency: 9.10, points: 1), Letter(character: "A", frequency: 8.12, points: 1), Letter(character: "O", frequency: 7.68, points: 2), Letter(character: "I", frequency: 7.31, points: 2),
-        Letter(character: "N", frequency: 6.95, points: 2), Letter(character: "S", frequency: 6.28, points: 2), Letter(character: "R", frequency: 6.02, points: 2), Letter(character: "H", frequency: 5.92, points: 3), Letter(character: "D", frequency: 4.32, points: 3),
-        Letter(character: "L", frequency: 3.98, points: 3), Letter(character: "U", frequency: 2.88, points: 4), Letter(character: "C", frequency: 2.71, points: 4), Letter(character: "M", frequency: 2.61, points: 4), Letter(character: "F", frequency: 2.30, points: 4),
-        Letter(character: "Y", frequency: 2.11, points: 5), Letter(character: "W", frequency: 2.09, points: 5), Letter(character: "G", frequency: 2.03, points: 5), Letter(character: "P", frequency: 1.82, points: 6), Letter(character: "B", frequency: 1.49, points: 6),
-        Letter(character: "V", frequency: 1.11, points: 6), Letter(character: "K", frequency: 0.69, points: 6), Letter(character: "X", frequency: 0.17, points: 7), Letter(character: "Q", frequency: 0.11, points: 8), Letter(character: "J", frequency: 0.10, points: 9),
-        Letter(character: "Z", frequency: 0.07, points: 10)
+        Letter(character: "E", frequency: 12.0), Letter(character: "T", frequency: 9.1), Letter(character: "A", frequency: 8.1), Letter(character: "O", frequency: 7.6), Letter(character: "I", frequency: 7.3),
+        Letter(character: "N", frequency: 6.9), Letter(character: "S", frequency: 6.2), Letter(character: "R", frequency: 6.0), Letter(character: "H", frequency: 5.9), Letter(character: "D", frequency: 4.3),
+        Letter(character: "L", frequency: 3.9), Letter(character: "U", frequency: 2.8), Letter(character: "C", frequency: 2.7), Letter(character: "M", frequency: 2.6), Letter(character: "F", frequency: 2.3),
+        Letter(character: "Y", frequency: 2.1), Letter(character: "W", frequency: 2.0), Letter(character: "G", frequency: 2.0), Letter(character: "P", frequency: 1.8), Letter(character: "B", frequency: 1.4),
+        Letter(character: "V", frequency: 1.1), Letter(character: "K", frequency: 0.6), Letter(character: "X", frequency: 0.1), Letter(character: "Q", frequency: 0.1), Letter(character: "J", frequency: 0.1),
+        Letter(character: "Z", frequency: 0.07)
     ]
     
     @State private var score: Int = 0
