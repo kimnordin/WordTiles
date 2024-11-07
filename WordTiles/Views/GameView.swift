@@ -183,9 +183,9 @@ struct GameView: View {
         clearSelection()
     }
     
-    private func moveDownTiles(above movableTiles: [Tile]) {
-        for movableTile in movableTiles {
-            for tile in tiles where tile.column == movableTile.column && tile.row < movableTile.row {
+    private func moveDownTiles(above selectedTiles: [Tile]) {
+        for selectedTile in selectedTiles {
+            for tile in tiles where tile.column == selectedTile.column && tile.row < selectedTile.row {
                 moveDownTile(tile: tile)
             }
         }
@@ -196,12 +196,15 @@ struct GameView: View {
     }
     
     private func addNewTiles(above removedTiles: [Tile]) {
-        for tile in removedTiles {
-            let newTile = generateRandomTile(row: 0, column: tile.column)
-            tiles.append(newTile)
-
-            while !tiles.contains(where: { $0.column == tile.column && $0.row == newTile.row + 1 }) {
-                moveDownTile(tile: newTile)
+        for removedTile in removedTiles {
+            let newTile = generateRandomTile(row: 0, column: removedTile.column)
+            
+            withAnimation(.default) {
+                tiles.append(newTile)
+                
+                while !tiles.contains(where: { $0.column == removedTile.column && $0.row == newTile.row + 1 }) {
+                    moveDownTile(tile: newTile)
+                }
             }
         }
     }
