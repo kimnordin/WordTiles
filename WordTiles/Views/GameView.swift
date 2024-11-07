@@ -170,7 +170,8 @@ struct GameView: View {
                     let completedWord = CompletedWord(word: selectedWord, points: points)
                     completedWords.append(completedWord)
                     
-                    moveDownTiles(selectedTiles)
+                    moveDownTiles(above: selectedTiles)
+                    removeTiles(selectedTiles)
                     
                     print("Valid word: \(completedWord.word) (+\(completedWord.points) points)")
                 } else {
@@ -181,21 +182,20 @@ struct GameView: View {
         clearSelection()
     }
     
-    private func moveDownTiles(_ selectedTiles: [Tile]) {
-        for selectedTile in selectedTiles {
-            for tile in tiles where tile.column == selectedTile.column && tile.row < selectedTile.row {
-                tile.row += 1
+    private func moveDownTiles(above movableTiles: [Tile]) {
+        for movableTile in movableTiles {
+            for tile in tiles where tile.column == movableTile.column && tile.row < movableTile.row {
+                moveDownTile(tile: tile)
             }
-            
-            tiles.removeAll(where: { $0 == selectedTile })
         }
     }
     
-    private func addNewTile(_ selectedTile: Tile) {
-        withAnimation {
-            let randomTile = generateRandomTile(row: 0, column: selectedTile.column)
-            tiles.append(randomTile)
-        }
+    private func moveDownTile(tile: Tile) {
+        tile.row += 1
+    }
+    
+    private func removeTiles(_ removableTiles: [Tile]) {
+        tiles.removeAll(where: { removableTiles.contains($0) })
     }
     
     private func isAdjacentTile(_ firstTilePosition: CGPoint, _ secondTilePosition: CGPoint) -> Bool {

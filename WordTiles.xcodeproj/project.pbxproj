@@ -108,9 +108,8 @@
 			isa = PBXGroup;
 			children = (
 				F21CE4872CDAD420005004CB /* GameView.swift */,
-				F21CE4882CDAD420005004CB /* GridView.swift */,
-				F21CE4892CDAD420005004CB /* TileSelectionPath.swift */,
-				F21CE48A2CDAD420005004CB /* TileView.swift */,
+				F2A8D9D52CDCFEE800857B36 /* Tile */,
+				F2A8D9D32CDCFECF00857B36 /* Grid */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -127,6 +126,23 @@
 				F21CE48D2CDAD420005004CB /* WordTilesApp.swift */,
 			);
 			path = WordTiles;
+			sourceTree = "<group>";
+		};
+		F2A8D9D32CDCFECF00857B36 /* Grid */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE4882CDAD420005004CB /* GridView.swift */,
+			);
+			path = Grid;
+			sourceTree = "<group>";
+		};
+		F2A8D9D52CDCFEE800857B36 /* Tile */ = {
+			isa = PBXGroup;
+			children = (
+				F21CE48A2CDAD420005004CB /* TileView.swift */,
+				F21CE4892CDAD420005004CB /* TileSelectionPath.swift */,
+			);
+			path = Tile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
