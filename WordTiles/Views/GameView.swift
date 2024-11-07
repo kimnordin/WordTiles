@@ -172,6 +172,7 @@ struct GameView: View {
                     
                     moveDownTiles(above: selectedTiles)
                     removeTiles(selectedTiles)
+                    addNewTiles(above: selectedTiles)
                     
                     print("Valid word: \(completedWord.word) (+\(completedWord.points) points)")
                 } else {
@@ -192,6 +193,17 @@ struct GameView: View {
     
     private func moveDownTile(tile: Tile) {
         tile.row += 1
+    }
+    
+    private func addNewTiles(above removedTiles: [Tile]) {
+        for tile in removedTiles {
+            let newTile = generateRandomTile(row: 0, column: tile.column)
+            tiles.append(newTile)
+
+            while !tiles.contains(where: { $0.column == tile.column && $0.row == newTile.row + 1 }) {
+                moveDownTile(tile: newTile)
+            }
+        }
     }
     
     private func removeTiles(_ removableTiles: [Tile]) {

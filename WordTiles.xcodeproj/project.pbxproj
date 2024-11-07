@@ -108,8 +108,8 @@
 			isa = PBXGroup;
 			children = (
 				F21CE4872CDAD420005004CB /* GameView.swift */,
-				F2A8D9D52CDCFEE800857B36 /* Tile */,
 				F2A8D9D32CDCFECF00857B36 /* Grid */,
+				F2A8D9D52CDCFEE800857B36 /* Tile */,
 			);
 			path = Views;
 			sourceTree = "<group>";
